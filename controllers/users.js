@@ -1,11 +1,11 @@
 const User = require('../models/user');
-// const bcrypt = require('bcryptjs');
-// const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const {
     BadRequest, Unauthorized, NotFound, Conflict,
   } = require('../errors');
 
-  // const { NODE_ENV, JWT_SECRET } = process.env;
+const { NODE_ENV, JWT_SECRET } = process.env;
 
 const getUser = (req, res, next) => {
   User.findById(req.user._id)

@@ -16,11 +16,11 @@ const validCreateUser = celebrate({
         'string.min': 'Минимум 8 символов',
         'any.required': 'Обязательное поле',
       }),
-    name: Joi.string().min(2).max(30)
-    .messages({
-      'string.min': 'Минимум 2 символа',
-      'string.max': 'Максимум 30 символов',
-    }),
+    name: Joi.string().min(2).max(30).required()
+      .messages({
+        'string.min': 'Минимум 2 символа',
+        'string.max': 'Максимум 30 символов',
+      }),
   },
 });
 
@@ -83,10 +83,10 @@ const validLogin = celebrate({
         return helpers.message('Некорректный email');
       })
       .messages({ 'any.required': 'Обязательное поле' }),
-    name: Joi.string().min(2).max(30)
+      password: Joi.string().min(8).required()
       .messages({
-        'string.min': 'Минимум 2 символа',
-        'string.max': 'Максимум 30 символов',
+        'string.min': 'Минимум 8 символов',
+        'any.required': 'Обязательное поле',
       }),
   },
 });
