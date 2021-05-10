@@ -1,5 +1,9 @@
 const { celebrate, Joi } = require('celebrate');
 const validator = require('validator');
+const {
+  invalidEmail, requiredField, minPassSimbols, minNameSimbols,
+  maxNameSimbols, invalidImageUrl, invalidTrailerUrl, invalidThumbnailUrl,
+} = require('../constants/constants');
 
 const validCreateUser = celebrate({
   body: {
@@ -8,18 +12,19 @@ const validCreateUser = celebrate({
         if (validator.isEmail(value)) {
           return value;
         }
-        return helpers.message('Некорректный email');
+        return helpers.message(invalidEmail);
       })
-      .messages({ 'any.required': 'Обязательное поле' }),
+      .messages({ 'any.required': requiredField }),
     password: Joi.string().min(8).required()
       .messages({
-        'string.min': 'Минимум 8 символов',
-        'any.required': 'Обязательное поле',
+        'string.min': minPassSimbols,
+        'any.required': requiredField,
       }),
     name: Joi.string().min(2).max(30).required()
       .messages({
-        'string.min': 'Минимум 2 символа',
-        'string.max': 'Максимум 30 символов',
+        'string.min': minNameSimbols,
+        'string.max': maxNameSimbols,
+        'any.required': requiredField,
       }),
   },
 });
@@ -35,23 +40,23 @@ const validCreateMovie = celebrate({
       if (validator.isURL(value)) {
         return value;
       }
-      return helper.message('Некорректная ссылка на постер');
+      return helper.message(invalidImageUrl);
     }),
     trailer: Joi.string().required().custom((value, helper) => {
       if (validator.isURL(value)) {
         return value;
       }
-      return helper.message('Некорректная ссылка на трейлер');
+      return helper.message(invalidTrailerUrl);
     }),
     thumbnail: Joi.string().required().custom((value, helper) => {
       if (validator.isURL(value)) {
         return value;
       }
-      return helper.message('Некорректная ссылка на миниатюру постера');
+      return helper.message(invalidThumbnailUrl);
     }),
     movieId: Joi.number().required(),
     nameRU: Joi.string().required(),
-    nameEN: Joi.string().required()
+    nameEN: Joi.string().required(),
   },
 });
 
@@ -62,13 +67,14 @@ const validPatchUser = celebrate({
         if (validator.isEmail(value)) {
           return value;
         }
-        return helpers.message('Некорректный email');
+        return helpers.message(invalidEmail);
       })
-      .messages({ 'any.required': 'Обязательное поле' }),
+      .messages({ 'any.required': requiredField }),
     name: Joi.string().required().min(2).max(30)
       .messages({
-        'string.min': 'Минимум 2 символа',
-        'string.max': 'Максимум 30 символов',
+        'string.min': minNameSimbols,
+        'string.max': maxNameSimbols,
+        'any.required': requiredField,
       }),
   },
 });
@@ -80,13 +86,13 @@ const validLogin = celebrate({
         if (validator.isEmail(value)) {
           return value;
         }
-        return helpers.message('Некорректный email');
+        return helpers.message(invalidEmail);
       })
-      .messages({ 'any.required': 'Обязательное поле' }),
-      password: Joi.string().min(8).required()
+      .messages({ 'any.required': requiredField }),
+    password: Joi.string().min(8).required()
       .messages({
-        'string.min': 'Минимум 8 символов',
-        'any.required': 'Обязательное поле',
+        'string.min': minPassSimbols,
+        'any.required': requiredField,
       }),
   },
 });
