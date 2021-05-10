@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
+const { ObjectId } = mongoose.Types.ObjectId;
 
 const movieSchema = new mongoose.Schema({
   country: {
