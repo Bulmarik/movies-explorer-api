@@ -7,7 +7,7 @@
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "deploy": "scp -r ../movies-explorer-api/* bulmarik@84.252.134.23:/home/bulmarik/movies-explorer-api"
   },
   "repository": {
     "type": "git",
