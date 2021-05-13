@@ -1,8 +1,9 @@
+const noMovies = 'Фильмов нет';
 const movieNotFound = 'Данный фильм не найден';
 const movieCannotRemove = 'Нельзя удалить чужой фильм';
 const movieRemove = 'Фильм удален';
 const userNotFound = 'Данный пользователь не найден';
-const userAlreadyExist = 'Данный пользователь уже существует';
+const emailAlreadyExist = 'Данный email уже используется';
 const incorrectData = 'Переданы некорректные данные';
 const invalidEmailOrPass = 'Неправильные email или пароль';
 const authError = 'Ошибка авторизации';
@@ -16,13 +17,16 @@ const requiredField = 'Обязательное поле';
 const minPassSimbols = 'Минимум 8 символов';
 const minNameSimbols = 'Минимум 2 символа';
 const maxNameSimbols = 'Максимум 30 символов';
+const lengthIdSymbol = 'Некорректная длина Id';
+const invalidNumbSystem = 'Некорректная система счисления';
 
 module.exports = {
+  noMovies,
   movieNotFound,
   movieCannotRemove,
   movieRemove,
   userNotFound,
-  userAlreadyExist,
+  emailAlreadyExist,
   incorrectData,
   invalidEmailOrPass,
   authError,
@@ -36,4 +40,6 @@ module.exports = {
   minPassSimbols,
   minNameSimbols,
   maxNameSimbols,
+  lengthIdSymbol,
+  invalidNumbSystem,
 };

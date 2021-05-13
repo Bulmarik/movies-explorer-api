@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
-const { invalidEmail } = require('../constants/constants');
+const { invalidEmail } = require('../utils/constants');
 
 const userSchema = new mongoose.Schema({
   email: {

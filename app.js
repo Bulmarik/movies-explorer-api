@@ -7,7 +7,7 @@ const { errors } = require('celebrate');
 const router = require('./routes/index');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const errorHandler = require('./middlewares/errorHandler');
-const { limiter, MONGODB_URL, PORT } = require('./config/config');
+const { limiter, MONGODB_URL, PORT } = require('./utils/config');
 
 const app = express();
 

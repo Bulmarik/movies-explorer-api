@@ -1,10 +1,13 @@
 const Movie = require('../models/movie');
 const { Forbidden, NotFound } = require('../errors');
-const { movieNotFound, movieCannotRemove, movieRemove } = require('../constants/constants');
+const {
+  noMovies, movieNotFound, movieCannotRemove, movieRemove,
+} = require('../utils/constants');
 
 const getMovies = (req, res, next) => {
   Movie.find({})
-    .then((movies) => res.status(200).send(movies))
+    .orFail(new NotFound(noMovies))
+    .then((movies) => res.send(movies))
     .catch(next);
 };
 
@@ -13,6 +16,7 @@ const createMovie = (req, res, next) => {
     country, director, duration, year, description,
     image, trailer, thumbnail, movieId, nameRU, nameEN,
   } = req.body;
+  const owner = req.user._id;
   Movie.create({
     country,
     director,
@@ -22,11 +26,12 @@ const createMovie = (req, res, next) => {
     image,
     trailer,
     thumbnail,
+    owner,
     movieId,
     nameRU,
     nameEN,
   })
-    .then((movie) => res.status(200).send(movie))
+    .then((movie) => res.send(movie))
     .catch(next);
 };
 
@@ -40,8 +45,8 @@ const deleteMovie = (req, res, next) => {
       if (String(movie.owner) !== req.user._id) {
         throw new Forbidden(movieCannotRemove);
       }
-      return Movie.findByIdAndRemove(movie._id)
-        .then(() => res.status(200).send({ message: movieRemove }))
+      return movie.remove()
+        .then(() => res.send({ message: movieRemove }))
         .catch(next);
     })
     .catch(next);

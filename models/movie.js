@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 
 const { ObjectId } = mongoose.Types.ObjectId;
-const { invalidImageUrl, invalidTrailerUrl, invalidThumbnailUrl } = require('../constants/constants');
+const { invalidImageUrl, invalidTrailerUrl, invalidThumbnailUrl } = require('../utils/constants');
 
 const movieSchema = new mongoose.Schema({
   country: {
@@ -57,7 +57,7 @@ const movieSchema = new mongoose.Schema({
     required: true,
   },
   movieId: {
-    type: ObjectId,
+    type: Number,
     required: true,
   },
   nameRU: {

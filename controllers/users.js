@@ -5,9 +5,9 @@ const {
   BadRequest, Unauthorized, NotFound, Conflict,
 } = require('../errors');
 const {
-  userNotFound, userAlreadyExist, incorrectData, invalidEmailOrPass,
-} = require('../constants/constants');
-const { JWT_SECRET, JWT_TTL } = require('../config/config');
+  userNotFound, emailAlreadyExist, incorrectData, invalidEmailOrPass,
+} = require('../utils/constants');
+const { JWT_SECRET, JWT_TTL } = require('../utils/config');
 
 const getUser = (req, res, next) => {
   User.findById(req.user._id)
@@ -15,19 +15,29 @@ const getUser = (req, res, next) => {
       if (!user) {
         throw new NotFound(userNotFound);
       }
-      return res.status(200).send({ email: user.email, name: user.name });
+      return res.send({ email: user.email, name: user.name });
     })
     .catch(next);
 };
 
 const patchUser = (req, res, next) => {
   const { email, name } = req.body;
-  User.findByIdAndUpdate(req.user._id, { email, name }, { new: true, runValidators: true })
-    .then((user) => {
-      if (!user) {
-        throw new NotFound(userNotFound);
+  User.findOne({ email })
+    .then((mail) => {
+      if (mail && (mail.id !== req.user._id)) {
+        throw new Conflict(emailAlreadyExist);
       }
-      return res.status(200).send({ email: user.email, name: user.name });
+      return User.findByIdAndUpdate(
+        req.user._id, { email, name },
+        { new: true, runValidators: true },
+      )
+        .then((user) => {
+          if (!user) {
+            throw new NotFound(userNotFound);
+          }
+          return res.send({ email: user.email, name: user.name });
+        })
+        .catch(next);
     })
     .catch(next);
 };
@@ -37,13 +47,13 @@ const createUser = (req, res, next) => {
   User.findOne({ email })
     .then((user) => {
       if (user) {
-        throw new Conflict(userAlreadyExist);
+        throw new Conflict(emailAlreadyExist);
       }
       return bcrypt.hash(password, 10)
         .then((hash) => User.create({
           email, password: hash, name,
         }))
-        .then(() => res.status(201).send({
+        .then(() => res.send({
           email, name,
         }))
         .catch((err) => {

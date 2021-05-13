@@ -1,15 +1,15 @@
 const { celebrate, Joi } = require('celebrate');
 const validator = require('validator');
 const {
-  invalidEmail, requiredField, minPassSimbols, minNameSimbols,
-  maxNameSimbols, invalidImageUrl, invalidTrailerUrl, invalidThumbnailUrl,
-} = require('../constants/constants');
+  invalidEmail, requiredField, minPassSimbols, minNameSimbols, maxNameSimbols,
+  invalidImageUrl, invalidTrailerUrl, invalidThumbnailUrl, lengthIdSymbol, invalidNumbSystem,
+} = require('../utils/constants');
 
 const validCreateUser = celebrate({
   body: {
     email: Joi.string().required()
       .custom((value, helpers) => {
-        if (validator.isEmail(value)) {
+        if (validator.isEmail(value, { require_protocol: true })) {
           return value;
         }
         return helpers.message(invalidEmail);
@@ -29,42 +29,11 @@ const validCreateUser = celebrate({
   },
 });
 
-const validCreateMovie = celebrate({
-  body: {
-    country: Joi.string().required(),
-    director: Joi.string().required(),
-    duration: Joi.number().required(),
-    year: Joi.string().required(),
-    description: Joi.string().required(),
-    image: Joi.string().required().custom((value, helper) => {
-      if (validator.isURL(value)) {
-        return value;
-      }
-      return helper.message(invalidImageUrl);
-    }),
-    trailer: Joi.string().required().custom((value, helper) => {
-      if (validator.isURL(value)) {
-        return value;
-      }
-      return helper.message(invalidTrailerUrl);
-    }),
-    thumbnail: Joi.string().required().custom((value, helper) => {
-      if (validator.isURL(value)) {
-        return value;
-      }
-      return helper.message(invalidThumbnailUrl);
-    }),
-    movieId: Joi.number().required(),
-    nameRU: Joi.string().required(),
-    nameEN: Joi.string().required(),
-  },
-});
-
 const validPatchUser = celebrate({
   body: {
     email: Joi.string().required()
       .custom((value, helpers) => {
-        if (validator.isEmail(value)) {
+        if (validator.isEmail(value, { require_protocol: true })) {
           return value;
         }
         return helpers.message(invalidEmail);
@@ -79,11 +48,52 @@ const validPatchUser = celebrate({
   },
 });
 
+const validCreateMovie = celebrate({
+  body: {
+    country: Joi.string().required(),
+    director: Joi.string().required(),
+    duration: Joi.number().required(),
+    year: Joi.string().required(),
+    description: Joi.string().required(),
+    image: Joi.string().required().custom((value, helper) => {
+      if (validator.isURL(value, { require_protocol: true })) {
+        return value;
+      }
+      return helper.message(invalidImageUrl);
+    }),
+    trailer: Joi.string().required().custom((value, helper) => {
+      if (validator.isURL(value, { require_protocol: true })) {
+        return value;
+      }
+      return helper.message(invalidTrailerUrl);
+    }),
+    thumbnail: Joi.string().required().custom((value, helper) => {
+      if (validator.isURL(value, { require_protocol: true })) {
+        return value;
+      }
+      return helper.message(invalidThumbnailUrl);
+    }),
+    movieId: Joi.number().required(),
+    nameRU: Joi.string().required(),
+    nameEN: Joi.string().required(),
+  },
+});
+
+const validIdMovie = celebrate({
+  params: {
+    _id: Joi.string().required().length(24).hex()
+      .messages({
+        'string.length': lengthIdSymbol,
+        'string.hex': invalidNumbSystem,
+      }),
+  },
+});
+
 const validLogin = celebrate({
   body: {
     email: Joi.string().required()
       .custom((value, helpers) => {
-        if (validator.isEmail(value)) {
+        if (validator.isEmail(value, { require_protocol: true })) {
           return value;
         }
         return helpers.message(invalidEmail);
@@ -99,7 +109,8 @@ const validLogin = celebrate({
 
 module.exports = {
   validCreateUser,
-  validCreateMovie,
   validPatchUser,
+  validCreateMovie,
+  validIdMovie,
   validLogin,
 };
